@@ -77,10 +77,11 @@
   /* Input fields */
   .stage-content input[type="text"],
   .stage-content input[type="number"],
+  .stage-content input[type="email"],
   .stage-content select {
-    width: 100%;
+    width:fit-content;
     padding: 10px;
-    margin-bottom: 10px;
+    margin: 10px;
     border: 2px solid #ddd;
     border-radius: 5px;
     font-size: 1rem;
@@ -89,17 +90,17 @@
   .stage-content input[type="text"]:focus,
   .stage-content input[type="number"]:focus,
   .stage-content select:focus {
-    border-color: #007bff;  /* Highlight on focus */
+    border-color: #2E5077;
     outline: none;
   }
   
   /* Button Styles */
   .stages button {
-    padding: 12px 25px;
-    font-size: 1rem;
+    padding: 50px 40px;
+    font-size: 1.2rem;
     background-color: #4DA1A9; 
     color: white;
-    border-radius: 5px;
+    border-radius: 50%;
     cursor: pointer;
     transition: background-color 0.3s ease, border-color 0.3s ease;
   }

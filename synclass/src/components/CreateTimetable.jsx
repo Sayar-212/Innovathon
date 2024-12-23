@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import "./../styles/CreateTimetable.css";
 
 const CreateTimetable = () => {
-  const [stage, setStage] = useState(1);
+  const location = useLocation();
+  const [stage, setStage] = useState(1); // Default stage
   const [subjects, setSubjects] = useState([]);
   const [faculties, setFaculties] = useState([]);
   const [venues, setVenues] = useState([]);
@@ -20,6 +22,12 @@ const CreateTimetable = () => {
     timeSlots: [],
   });
 
+  useEffect(() => {
+    if (location.state && location.state.stage !== undefined) {
+      setStage(location.state.stage); // Set stage based on navigation state
+    }
+  }, [location.state]);
+
   const handleSubjects = () => {
     const tempSubjects = [];
     for (let i = 0; i < numSubjects; i++) {
@@ -34,13 +42,11 @@ const CreateTimetable = () => {
       tempFaculties.push({
         name: "",
         id: "",
-        subject: "",
-        code: "",
         email: "",
         phone: "",
         address: "",
-        subjectTaught: "", // New field for subject taught
-        subjectCode: "",  // New field for subject code taught
+        subjectsTaught: [],
+        numSubjectsTaught: 0, // Add field to track the number of subjects taught
       });
     }
     setFaculties(tempFaculties);
@@ -80,10 +86,15 @@ const CreateTimetable = () => {
         return (
           <div className="stage-content">
             <h2>Institute Timing</h2>
-            <label>Start Time: </label>
+            Institute -<label> Start Time: </label>
             <select
               value={instituteTiming.startTime}
-              onChange={(e) => setInstituteTiming({ ...instituteTiming, startTime: e.target.value })}
+              onChange={(e) =>
+                setInstituteTiming({
+                  ...instituteTiming,
+                  startTime: e.target.value,
+                })
+              }
             >
               {[...Array(24)].map((_, index) => (
                 <option key={index} value={index}>
@@ -94,7 +105,12 @@ const CreateTimetable = () => {
             <label>End Time: </label>
             <select
               value={instituteTiming.endTime}
-              onChange={(e) => setInstituteTiming({ ...instituteTiming, endTime: e.target.value })}
+              onChange={(e) =>
+                setInstituteTiming({
+                  ...instituteTiming,
+                  endTime: e.target.value,
+                })
+              }
             >
               {[...Array(24)].map((_, index) => (
                 <option key={index} value={index}>
@@ -102,10 +118,16 @@ const CreateTimetable = () => {
                 </option>
               ))}
             </select>
-            <label>Break Start Time: </label>
+            <br />
+            Break -<label> Start Time: </label>
             <select
               value={instituteTiming.breakStart}
-              onChange={(e) => setInstituteTiming({ ...instituteTiming, breakStart: e.target.value })}
+              onChange={(e) =>
+                setInstituteTiming({
+                  ...instituteTiming,
+                  breakStart: e.target.value,
+                })
+              }
             >
               {[...Array(24)].map((_, index) => (
                 <option key={index} value={index}>
@@ -113,10 +135,15 @@ const CreateTimetable = () => {
                 </option>
               ))}
             </select>
-            <label>Break End Time: </label>
+            <label>End Time: </label>
             <select
               value={instituteTiming.breakEnd}
-              onChange={(e) => setInstituteTiming({ ...instituteTiming, breakEnd: e.target.value })}
+              onChange={(e) =>
+                setInstituteTiming({
+                  ...instituteTiming,
+                  breakEnd: e.target.value,
+                })
+              }
             >
               {[...Array(24)].map((_, index) => (
                 <option key={index} value={index}>
@@ -124,6 +151,7 @@ const CreateTimetable = () => {
                 </option>
               ))}
             </select>
+            <br />
             <button onClick={handleInstituteTiming}>Set Timing</button>
           </div>
         );
@@ -190,7 +218,9 @@ const CreateTimetable = () => {
             <button onClick={handleFaculties}>Set Faculties</button>
             {faculties.map((faculty, index) => (
               <div key={index}>
-                <h4>Faculty {index + 1}</h4>
+                <br />
+                <br />
+                <h3>Faculty {index + 1}</h3>
                 <input
                   type="text"
                   placeholder="Faculty Name"
@@ -208,26 +238,6 @@ const CreateTimetable = () => {
                   onChange={(e) => {
                     const updated = [...faculties];
                     updated[index].id = e.target.value;
-                    setFaculties(updated);
-                  }}
-                />
-                <input
-                  type="text"
-                  placeholder="Subject Taught"
-                  value={faculty.subjectTaught}
-                  onChange={(e) => {
-                    const updated = [...faculties];
-                    updated[index].subjectTaught = e.target.value;
-                    setFaculties(updated);
-                  }}
-                />
-                <input
-                  type="text"
-                  placeholder="Subject Code"
-                  value={faculty.subjectCode}
-                  onChange={(e) => {
-                    const updated = [...faculties];
-                    updated[index].subjectCode = e.target.value;
                     setFaculties(updated);
                   }}
                 />
@@ -263,16 +273,75 @@ const CreateTimetable = () => {
                 />
                 {/* Availability Days */}
                 <div className="faculty-availability">
-                  {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map((day) => (
-                    <div className="day" key={day}>
-                      <label>{day}</label>
-                      <input
-                        type="checkbox"
-                        onChange={() => handleFacultyAvailability(day)}
-                      />
-                    </div>
-                  ))}
+                  {" "}
+                  <br />
+                  Availibility -
+                  {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map(
+                    (day) => (
+                      <div className="day" key={day}>
+                        <label>{day}</label>
+                        <input
+                          type="checkbox"
+                          onChange={() => handleFacultyAvailability(day)}
+                        />
+                      </div>
+                    )
+                  )}
                 </div>
+                <br />
+                <br />
+                {/* Number of Subjects Taught */}
+                <label>Number of Subjects Taught: </label>
+                <input
+                  type="number"
+                  min="1"
+                  value={faculty.numSubjectsTaught}
+                  onChange={(e) => {
+                    const updated = [...faculties];
+                    const numSubjects = parseInt(e.target.value, 10);
+                    updated[index].numSubjectsTaught = numSubjects;
+
+                    // Ensure subjectsTaught array length matches numSubjects
+                    updated[index].subjectsTaught = Array.from(
+                      { length: numSubjects },
+                      (_, i) =>
+                        updated[index].subjectsTaught[i] || {
+                          subjectName: "",
+                          subjectCode: "",
+                        }
+                    );
+                    setFaculties(updated);
+                  }}
+                />
+              
+                {/* Dynamically Render Subject Fields */}
+                {faculty.subjectsTaught.map((subject, subIndex) => (
+                  <div key={subIndex}>
+                    <h5>Subject {subIndex + 1}</h5>
+                    <input
+                      type="text"
+                      placeholder="Subject Name"
+                      value={subject.subjectName}
+                      onChange={(e) => {
+                        const updated = [...faculties];
+                        updated[index].subjectsTaught[subIndex].subjectName =
+                          e.target.value;
+                        setFaculties(updated);
+                      }}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Subject Code"
+                      value={subject.subjectCode}
+                      onChange={(e) => {
+                        const updated = [...faculties];
+                        updated[index].subjectsTaught[subIndex].subjectCode =
+                          e.target.value;
+                        setFaculties(updated);
+                      }}
+                    />
+                  </div>
+                ))}
               </div>
             ))}
           </div>
@@ -310,18 +379,59 @@ const CreateTimetable = () => {
         return (
           <div className="stage-content">
             <h2>Summary</h2>
+
             <h3>Institute Timings:</h3>
             <p>
-              Start Time: {instituteTiming.startTime} &mdash; End Time: {instituteTiming.endTime}
+              Start Time: {instituteTiming.startTime}:00 &mdash; End Time:{" "}
+              {instituteTiming.endTime}:00
               <br />
-              Break Start Time: {instituteTiming.breakStart} &mdash; Break End Time: {instituteTiming.breakEnd}
+              Break Start Time: {instituteTiming.breakStart}:00 &mdash; Break
+              End Time: {instituteTiming.breakEnd}:00
             </p>
+
             <h3>Subjects:</h3>
-            <pre>{JSON.stringify(subjects, null, 2)}</pre>
+            {subjects.length > 0 ? (
+              <ul>
+                {subjects.map((subject, index) => (
+                  <li key={index}>
+                    {index + 1}. {subject.name} (Code: {subject.code}, Hours:{" "}
+                    {subject.hours})
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No subjects added.</p>
+            )}
+
             <h3>Faculties:</h3>
-            <pre>{JSON.stringify(faculties, null, 2)}</pre>
+            {faculties.length > 0 ? (
+              <ul>
+                {faculties.map((faculty, index) => (
+                  <li key={index}>
+                    {index + 1}. {faculty.name} (ID: {faculty.id}, Subject:{" "}
+                    {faculty.subjectTaught} - {faculty.subjectCode}, Email:{" "}
+                    {faculty.email}, Phone: {faculty.phone}, Address:{" "}
+                    {faculty.address})
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No faculties added.</p>
+            )}
+
             <h3>Venues:</h3>
-            <pre>{JSON.stringify(venues, null, 2)}</pre>
+            {venues.length > 0 ? (
+              <ul>
+                {venues.map((venue, index) => (
+                  <li key={index}>
+                    Room {index + 1}: {venue.room}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No venues added.</p>
+            )}
+
             <button className="generate-button">Generate Timetable</button>
           </div>
         );
@@ -334,7 +444,9 @@ const CreateTimetable = () => {
     <div className="create-timetable">
       <h1>Create Timetable</h1>
       <div className="stages">
-        <button onClick={() => setStage(0)}>Step 1: Set Institute Timings</button>
+        <button onClick={() => setStage(0)}>
+          Step 1: Set Institute Timings
+        </button>
         <button onClick={() => setStage(1)}>Step 2: Add Subjects</button>
         <button onClick={() => setStage(2)}>Step 3: Add Faculties</button>
         <button onClick={() => setStage(3)}>Step 4: Add Venues</button>
