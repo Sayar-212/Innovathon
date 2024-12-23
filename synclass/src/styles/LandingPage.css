@@ -1,0 +1,37 @@
+.landing-page {
+    background-color: #F6F4F0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .landing-title {
+    color: #2E5077;
+    font-size: 3rem;
+    margin: 0;
+  }
+  
+  .landing-subtitle {
+    color: #4DA1A9;
+    font-size: 1.5rem;
+    margin-top: 10px;
+  }
+  
+  .login-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: white;
+    background-color: #4DA1A9;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .login-button:hover {
+    background-color: #2E5077;
+  }
+  
