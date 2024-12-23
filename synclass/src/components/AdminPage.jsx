@@ -32,7 +32,7 @@ const AdminPage = () => {
       <button
         style={{
           background: "none",
-          color: "#79D7BE",
+          color: "#2E5077",
           border: "2px solid",
           padding: "1em 2em",
           fontSize: "1em",
