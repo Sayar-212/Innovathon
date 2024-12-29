@@ -1,1 +1,1 @@
-Innovathon Project Nigger
+Innovathon Project - Timetable Generator
